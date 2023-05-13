@@ -1,6 +1,10 @@
 import { lazy,Suspense } from 'react';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import AppHeader from "../appHeader/AppHeader";
+import TestOne from '../testComponents/testComponentOne';
+import withHOC from '../testComponents/withTestComponent';
+import ModernComponent from '../testComponents/modernComponent';
+import TestTwo from '../testComponents/testComponentTwo';
 // import { MainPage, ComicsPage, SingleComicPage} from '../pages';
 // import Page404 from '../pages/404';
 import Spinner from '../spinner/spinner';
@@ -8,11 +12,17 @@ const Page404= lazy(() => import("../pages/404"))
 const MainPage = lazy(() => import('../pages/MainPage'));
 const ComicsPage = lazy(() => import('../pages/ComicsPage'));
 const SingleComicPage = lazy(() => import('../pages/SingleComicPage'));
+const SingleCharacterLayout= lazy(() => import('../comicsList/SingleCharacterLayout/SingleCharacterLayout'));
+const SinglePage = lazy(() => import('../pages/singlePage'));
+const UpdateComponent = withHOC(TestOne);
 const App = () => {
     return (
         <Router>
             <div className="app">
                 <AppHeader/>
+                <ModernComponent>
+                    <TestTwo/>
+                </ModernComponent>
                 <main>
                 <Suspense fallback={<Spinner/>}>
                     <Routes>
@@ -20,6 +30,11 @@ const App = () => {
                         <Route  path="/comics" element={<ComicsPage/>}/>
                         <Route  path="*" element={<Page404 />}/>
                         <Route  path="comics/:comicId" element={<SingleComicPage />} errorElement={<Page404 />}/>
+                        <Route path="/comics/:id" elemnt={   <SinglePage Component={SingleComicPage} dataType='comic'/>}/>
+                          
+                        <Route path="/characters/:id" element={   <SinglePage Component={SingleCharacterLayout} dataType='character'/>}/>
+                          
+                        <Route  path="/hoc" element={<UpdateComponent test = "mmmmm"/>}/>
                     </Routes>
                     </Suspense>
                 </main>
